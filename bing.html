@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>NLS Overlay + Bing Maps SDK</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta http-equiv='imagetoolbar' content='no' />
+		<style type="text/css">
+		/*<![CDATA[*/
+		v\:* {behavior:url(#default#VML);}
+		html, body { font-family: 'Lucida Grande',Geneva,Arial,Verdana,sans-serif; }
+		body { margin: 10px; background: #fff; }
+		/*]]>*/
+		</style>
+		<script type="text/javascript" src="http://nls.tileserver.com/api.js"></script>
+		<script type="text/javascript" src="http://dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2"></script>
+		<script type="text/javascript">
+		//<![CDATA[
+		 var map = null;
+		 
+		 function load()
+		 {
+			map = new VEMap('map');
+			map.LoadMap( new VELatLong(55.96,-3.2), 12, 'a', false);
+				
+			var tileSourceSpec = new VETileSourceSpecification("Historic", NLSTileUrlOS());
+			tileSourceSpec.NumServers = 5;
+			tileSourceSpec.MinZoomLevel = 1;
+			tileSourceSpec.MaxZoomLevel = 14;
+			tileSourceSpec.Opacity = 0.8;
+			tileSourceSpec.ZIndex = 100;
+
+			map.AddTileLayer(tileSourceSpec, true);
+		 }
+		//]]>
+		</script>
+	</head>
+	<body onload="load()">
+		<h1>NLS Overlay + Bing Maps SDK</h1>
+		<p>
+			<a href="http://www.nls.uk/">National Library of Scotland</a> &amp; <a href="http://www.klokantech.com/">Klokan Technologies GmbH</a>
+		</p>
+		<p>
+			Historical maps from 1919-47 <a href="http://geo.nls.uk/maps/api/">NLS Maps API</a>
+		</p>
+		<div id="map" style="position: relative; width: 600px; height: 400px"></div>
+	</body>
+</html>

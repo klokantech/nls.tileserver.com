@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+	<title>NLS Map + KHTML</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style type="text/css"> v\:* {behavior:url(#default#VML);}
+        html, body { font-family: 'Lucida Grande',Geneva,Arial,Verdana,sans-serif; }
+        body { margin: 10px; background: #fff; }
+    </style>	
+	<script type="text/javascript" src="http://nls.tileserver.com/api.js"></script>
+	<script type="text/javascript" src="khtml.js"> </script>
+	<script type="text/javascript">
+	function init(){
+	        map1=new kmap(document.getElementById("map1"));
+	        var center=new kPoint(54.699234,-2.834473);
+	        map1.setCenter(center,5);
+	}
+	</script>
+</head>
+<body onload="init()">
+
+<h1>NLS Map + KHTML</h1>
+
+Attractive maps with non-discreet levels, fast zooming and native CSS 3D support for iPhone, iPad and WebKit based browsers (Google Chrome, Safari, ...). More at <a href="http://www.khtml.org/">http://www.khtml.org/</a>.
+<p>
+
+<a href="http://www.nls.uk/">National Library of Scotland</a> &amp; <a href="http://www.klokantech.com/">Klokan Technologies GmbH</a>
+<p>
+
+<div id="map1" style="width:500px; height:350px;" />
+
+</body>
+</html>

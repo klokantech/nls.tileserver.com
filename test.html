@@ -1,0 +1,33 @@
+<html><head>
+<script type="text/javascript">
+
+var done = (window.location.href.search(/\?/) != -1);
+var winner = "";
+
+function server(url, testurl) {
+	// console.log(url);
+	var img = new Image();
+	img.onload = function(evt) {
+		if (!done && winner=="") {
+			winner = url;
+			if (window.parent) window.parent.tileserver=url;
+			if (window.parent.tileserver_result) window.parent.tileserver_result(url);
+			window.location = window.location.href+"?"+url;
+		}
+	};
+	if (testurl != undefined) img.src=testurl+"?"+Math.floor(Math.random()*10000);
+	else img.src="http://t0."+url+"none.gif?"+Math.floor(Math.random()*10000);
+}
+
+function start() {
+	if (!done) {
+		server("nlsuk.tileserver.com/maps/api/nls/");
+		server("uk.tileserver.com/_os1/r0/");
+		server("cz.tileserver.com/nls/");
+		// server("nls.tileserver.com/_os1/r0/");
+		// server("slow", "http://dev.klokantech.com/cgi-bin/404delay.py");
+	}
+}
+
+</script>
+</head><body onload="start()"></body></html>

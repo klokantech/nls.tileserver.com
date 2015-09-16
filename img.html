@@ -1,0 +1,32 @@
+<html>
+<head>
+<script type="text/javascript">
+
+function choose(url) {
+window.parent.tileserver=url;
+window.location = "http://nls.tileserver.com/none.gif?"+url;
+}
+
+function server(url) {
+	var img = new Image();
+	img.onload = function(evt) {
+		NLS_alternatives.push(url);
+		if (quadkey != undefined) NLS_quadkey_alternatives.push(url);
+		if ((NLS_debug != -1) && (console != undefined)) console.log(url);
+	};
+	img.src="http://t0."+url+"none.gif?"+Math.floor(Math.random()*10000);
+}
+
+server("uk.tileserver.com/_os1/r0/");
+server("nlsuk.tileserver.com/maps/api/nls/");
+server("cz.tileserver.com/nls/");
+server("nls.tileserver.com/_os1/r0/");
+
+</script>
+</head>
+<body>
+<img src="http://www.oldmapsonline.org/cgi-bin/404delay.py" onload="choose('404delay')" alt="" />
+<img src="http://t0.uk.tileserver.com/_os1/r0/none.gif" onload="choose('uk')" alt="" />
+<img src="http://t0.cz.tileserver.com/nls/none.gif" onload="choose('cz')" alt="" />
+</body>
+</html>

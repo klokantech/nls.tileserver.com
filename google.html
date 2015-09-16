@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+  <head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>NLS Map + Google Maps API v2</title>
+	<style type="text/css">
+	/*<![CDATA[*/
+	v\:* {behavior:url(#default#VML);}
+	html, body { font-family: 'Lucida Grande',Geneva,Arial,Verdana,sans-serif; }
+	body { margin: 10px; background: #fff; }
+	/*]]>*/
+	</style>
+	<script type="text/javascript" src="http://nls.tileserver.com/api.js"></script>
+	<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAA9pSslyaYyyl6x8HKrHAZvxS4-alJFZ9Cxp3qiYSlGHIYxF9uHhT0NLb9B9BXGUGGDctSO4QVa1jLLA" type="text/javascript">
+</script>
+	<script type="text/javascript">
+	//<![CDATA[
+
+	function load() {
+		if (GBrowserIsCompatible()) {
+
+			var map = new GMap2(document.getElementById("map"));
+			map.setCenter(new GLatLng(55.96,-3.2), 12);
+			map.setUIToDefault();
+			
+// -- copy&paste block start
+var copyright = new GCopyright(1, new GLatLngBounds(new GLatLng(-90, -180),new GLatLng(90, 180)), 1,
+	"Historical maps from <a href='http://geo.nls.uk/maps/api/'>NLS Maps API<\/a>");
+var copyrightCollection = new GCopyrightCollection();
+copyrightCollection.addCopyright(copyright);
+var tilelayer = new GTileLayer(copyrightCollection, 1, NLSTileUrlOS('MAXZOOM'));
+tilelayer.getTileUrl = NLSTileUrlOS;
+var nlsmap = new GMapType([tilelayer], G_NORMAL_MAP.getProjection(), "Historical");
+// -- copy&paste block end
+
+// -- remember to add the new map layer to your mashup!!
+map.addMapType(nlsmap);
+
+
+			map.setMapType(nlsmap);
+
+			/*
+			var marker = new GMarker( new GLatLng(55.96,-3.2) );
+			marker.bindInfoWindow("This is a text for the info window");
+			map.addOverlay(marker);
+			*/
+		}
+	}
+	//]]>
+	</script>
+	</head>
+	<body onload="load()" onunload="GUnload()">
+		<h1>NLS Map + Google Maps API v2</h1>
+		<p>
+			<a href="http://www.nls.uk/">National Library of Scotland</a> &amp; <a href="http://www.klokantech.com/">Klokan Technologies GmbH</a>
+		</p>
+		<p>
+			Historical maps from 1919-47 <a href="http://geo.nls.uk/maps/api/">NLS Maps API</a>
+		</p>
+		<div id="map" style="width: 600px; height: 400px" w.m=""></div>
+	</body>
+</html>
