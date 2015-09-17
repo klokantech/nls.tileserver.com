@@ -118,6 +118,10 @@ function initialize_map(map_zoom, map_center, map_viewport) {
      center: map_center,
      streetViewControl: false,
      mapTypeControl: false,
+     zoomControl: true,
+     zoomControlOptions: {
+        position: google.maps.ControlPosition.LEFT_TOP
+     },
      mapTypeControlOptions: {
       mapTypeIds: ['historic', google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.HYBRID, google.maps.MapTypeId.TERRAIN],
       style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
