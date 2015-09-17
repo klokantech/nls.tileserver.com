@@ -20,7 +20,7 @@
 // Global variable with the tileserver
 var tileserver = "";
 // var tileserver_default = "uk.tileserver.com/_os1/r0/";
-var tileserver_default = "cz.tileserver.com/nls/";
+var tileserver_default = "nls.tileserver.com/nls/";
 var _gaq = _gaq || [];
 
 // THE PUBLIC FUNCTIONS:
@@ -35,54 +35,57 @@ var _gaq = _gaq || [];
  *
  * The function returns tiles from the tileserver_default, and after the dynamic test is finished from the fastest tileserver available
  */
-function NLSTileUrlOS( x, y, z ) {
+function NLSTileUrlOS(x, y, z) {
 
-	// the "MAXZOOM" constant
-	if (x == "MAXZOOM") return 14;
+  // the "MAXZOOM" constant
+  if (x == "MAXZOOM")
+    return 14;
 
-	// without given "x" we are returning Bing SDK string
-	if (x == undefined) {
-		return "http://t%2."+tileserver_default+'%4.jpg';
-		// if (tileserver == "") return "http://t%2."+tileserver_default+"%4.jpg";
-		// else return "http://t%2."+tileserver+'%4.jpg';
-	}
+  // without given "x" we are returning Bing SDK string
+  if (x == undefined) {
+    return "http://t%2." + tileserver_default + '%4.jpg';
+    // if (tileserver == "") return "http://t%2."+tileserver_default+"%4.jpg";
+    // else return "http://t%2."+tileserver+'%4.jpg';
+  }
 
-	// with "${x}" we return OpenLayers Array - this will mostly return only the tileserver_default location
-	if (x == "${x}") {
-		var urls = new Array();
-		if (tileserver == "")
-			for (no=0;no<5;no++)
-				urls.push("http://t"+no+"."+tileserver_default+z+'/'+x+'/'+y+'.jpg');
-		else
-			for (no=0;no<5;no++)
-				urls.push("http://t"+no+"."+tileserver+z+'/'+x+'/'+y+'.jpg');
-		return urls;
-	}
+  // with "${x}" we return OpenLayers Array - this will mostly return only the tileserver_default location
+  if (x == "${x}") {
+    var urls = new Array();
+    if (tileserver == "")
+      for (no = 0; no < 5; no++)
+        urls.push("http://t" + no + "." + tileserver_default + z + '/' + x + '/' + y + '.jpg');
+    else
+      for (no = 0; no < 5; no++)
+        urls.push("http://t" + no + "." + tileserver + z + '/' + x + '/' + y + '.jpg');
+    return urls;
+  }
 
-	// behave like OpenLayers .getURL(bounds):
-	if (x['left'] != undefined) {
-		var bounds = x;
-		var res = this['map']['getResolution']();
-		x = Math.round((bounds['left'] - this['maxExtent']['left']) / (res * this['tileSize']['w']));
-		y = Math.round((this['maxExtent']['top'] - bounds['top']) / (res * this['tileSize']['h']));
-		z = this['map']['getZoom']();
-	}
+  // behave like OpenLayers .getURL(bounds):
+  if (x['left'] != undefined) {
+    var bounds = x;
+    var res = this['map']['getResolution']();
+    x = Math.round((bounds['left'] - this['maxExtent']['left']) / (res * this['tileSize']['w']));
+    y = Math.round((this['maxExtent']['top'] - bounds['top']) / (res * this['tileSize']['h']));
+    z = this['map']['getZoom']();
+  }
 
-	// behave like Google .getTileUrl(tile, zoom):
-	if (x['x'] != undefined && Number( y ) != NaN && z == undefined) {
-		z = y;
-		y = x['y'];
-		x = x['x'];
-	}
-  
+  // behave like Google .getTileUrl(tile, zoom):
+  if (x['x'] != undefined && Number(y) != NaN && z == undefined) {
+    z = y;
+    y = x['y'];
+    x = x['x'];
+  }
+
   // HACK - ALWAYS USE THE NEW CDN ADDRESS
-  var no = (x+y) % 4;
-  return "http://nls-"+no+".tileserver.com/nls/"+z+'/'+x+'/'+y+'.jpg';
+  var no = (x + y) % 4;
+  return "http://nls-" + no + ".tileserver.com/nls/" + z + '/' + x + '/' + y + '.jpg';
 
-	// with numbers let's return directly the url to the tile on the server
-	var no = (x+y) % 5;
-	if (tileserver == "") return "http://t"+no+"."+tileserver_default+z+'/'+x+'/'+y+'.jpg';
-	else return "http://t"+no+"."+tileserver+z+'/'+x+'/'+y+'.jpg';
+  // with numbers let's return directly the url to the tile on the server
+  var no = (x + y) % 5;
+  if (tileserver == "")
+    return "http://t" + no + "." + tileserver_default + z + '/' + x + '/' + y + '.jpg';
+  else
+    return "http://t" + no + "." + tileserver + z + '/' + x + '/' + y + '.jpg';
 }
 
 /* CHOOSE A TILESERVER ON THE CLIENT SIDE
@@ -98,14 +101,17 @@ _gaq.push(['_setDomainName', 'none']);
 _gaq.push(['_setAllowLinker', true]);
 _gaq.push(['_setAllowHash', false]);
 if (window.location.href.search("nls.tileserver.com") != -1)
-	_gaq.push(['_setVar', ( window!=window.top ? "iframe" : "nls.tileserver.com" )]);
-else 
-	_gaq.push(['_setVar', 'api']);
+  _gaq.push(['_setVar', (window != window.top ? "iframe" : "nls.tileserver.com")]);
+else
+  _gaq.push(['_setVar', 'api']);
 _gaq.push(['_setCustomVar', 1, 'tileserver', tileserver, 2]);
 _gaq.push(['_trackPageview']);
 
 (function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  var ga = document.createElement('script');
+  ga.type = 'text/javascript';
+  ga.async = true;
   ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(ga, s);
 })();
