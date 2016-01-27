@@ -22,6 +22,8 @@ var tileserver = "";
 var tileserver_default = "cz.tileserver.com/nls/";
 var _gaq = _gaq || [];
 
+var protocol = ('https:' == document.location.protocol ? 'https://' : 'http://');
+
 // THE PUBLIC FUNCTIONS:
 // =====================
 
@@ -41,7 +43,7 @@ function NLSTileUrlOS( x, y, z ) {
 
 	// without given "x" we are returning Bing SDK string
 	if (x == undefined) {
-		return "http://t%2."+tileserver_default+'%4.jpg'; // ALWAYS DEFAULT SERVER NOW
+		return protocol+"t%2."+tileserver_default+'%4.jpg'; // ALWAYS DEFAULT SERVER NOW
 		// if (tileserver == "") return "http://t%2."+tileserver_default+"%4.jpg";
 		// else return "http://t%2."+tileserver+'%4.jpg';
 	}
@@ -51,10 +53,10 @@ function NLSTileUrlOS( x, y, z ) {
 		var urls = new Array();
 		if (tileserver == "")
 			for (no=0;no<5;no++)
-				urls.push("http://t"+no+"."+tileserver_default+z+'/'+x+'/'+y+'.jpg');
+				urls.push(protocol+"t"+no+"."+tileserver_default+z+'/'+x+'/'+y+'.jpg');
 		else
 			for (no=0;no<5;no++)
-				urls.push("http://t"+no+"."+tileserver+z+'/'+x+'/'+y+'.jpg');
+				urls.push(protocol+"t"+no+"."+tileserver+z+'/'+x+'/'+y+'.jpg');
 		return urls;
 	}
 	
@@ -76,12 +78,12 @@ function NLSTileUrlOS( x, y, z ) {
   
   // HACK - ALWAYS USE THE NEW CDN ADDRESS
   var no = (x+y) % 4;
-  return "http://nls-"+no+".tileserver.com/nls/"+z+'/'+x+'/'+y+'.jpg';
+  return protocol+"nls-"+no+".tileserver.com/nls/"+z+'/'+x+'/'+y+'.jpg';
 	
 	// with numbers let's return directly the url to the tile on the server
 	var no = (x+y) % 5;
-	if (tileserver == "") return "http://t"+no+"."+tileserver_default+z+'/'+x+'/'+y+'.jpg';
-	else return "http://t"+no+"."+tileserver+z+'/'+x+'/'+y+'.jpg';
+	if (tileserver == "") return protocol+"t"+no+"."+tileserver_default+z+'/'+x+'/'+y+'.jpg';
+	else return protocol+"t"+no+"."+tileserver+z+'/'+x+'/'+y+'.jpg';
 }
 
 /* CHOOSE A TILESERVER ON THE CLIENT SIDE
@@ -101,7 +103,7 @@ function tileserver_test() {
 	tempIFrame.style.border='0px';
 	tempIFrame.style.width='0px';
 	tempIFrame.style.height='0px';
-	tempIFrame.src= 'http://nls.tileserver.com/test.html'; // RUN THE SPEED TEST!!!
+	tempIFrame.src= protocol+'nls.tileserver.com/test.html'; // RUN THE SPEED TEST!!!
 	iFrameObj = document.body.appendChild(tempIFrame);
 }
 
