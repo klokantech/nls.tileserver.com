@@ -50,7 +50,7 @@ function initialize() {
 				var lat = position.coords.latitude;
 				var lng = position.coords.longitude;
 				var center = ol.proj.fromLonLat([lng, lat]);
-				if (gbbounds.contains(center)) {
+				if (ol.extent.containsCoordinate(gbbounds, center)) {
 					map_center = center;
 					map_zoom = 13;
 					initialize_map(map_zoom, map_center);
