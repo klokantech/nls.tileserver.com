@@ -136,6 +136,7 @@ function initialize_map(map_zoom, map_center, map_viewport) {
             })
         ],
         target: 'map_canvas',
+        controls: ol.control.defaults({attribution: false}),
         view: new ol.View({
             center: map_center,
             zoom: map_zoom
