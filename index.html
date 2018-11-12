@@ -1,4 +1,4 @@
-<html> 
+<html>
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <title>National Library of Scotland: Maps API</title>
@@ -10,7 +10,7 @@ var map;
 
 function permalink() {
      var url = document.location.toString();
-     if (url.indexOf('?') != -1) { url = url.substring(0,url.indexOf('?'))}; 
+     if (url.indexOf('?') != -1) { url = url.substring(0,url.indexOf('?'))};
     var center = ol.proj.toLonLat(map.getView().getCenter());
     document.location.href= url + "?lat=" + center[1] +"&lng="+ center[0] + "&zoom="+map.getView().getZoom();
 }
@@ -28,22 +28,48 @@ var param_q = getURLParam("q");
 var param_lat = getURLParam("lat");
 var param_lng = getURLParam("lng");
 var param_zoom = getURLParam("zoom");
- 
+
 var map;
 
 function initialize() {
 
 	var map_zoom = 5;
     var map_center = ol.proj.fromLonLat([-2.834473,54.699234]);
-	
+
 	var gbbounds = ol.extent.applyTransform(
             [-9.272461,49.795450,2.746582,60.898388],
             ol.proj.getTransform('EPSG:4326', 'EPSG:3857')
         );
 
+    var isAsync = false;
+
 	if (param_lat && param_lng) {
         map_center = ol.proj.fromLonLat([parseFloat(param_lng), parseFloat(param_lat)]);
 	} else if (param_q == 'auto') {
+        isAsync = true;
+
+        var doGeoIp = function() {
+            function reqListener() {
+                var response = JSON.parse(this.responseText);
+                if (response.longitude && response.latitude) {
+                    center = ol.proj.fromLonLat([response.longitude, response.latitude]);
+                    if (ol.extent.containsCoordinate(gbbounds, center)) {
+                        map_center = center;
+                        map_zoom = 13;
+                        initialize_map(map_zoom, map_center);
+                    } else {
+                        initialize_map(map_zoom, map_center);
+                    }
+                } else {
+                    initialize_map(map_zoom, map_center);
+                }
+            }
+
+            var oReq = new XMLHttpRequest();
+            oReq.addEventListener('load', reqListener);
+            oReq.open('GET', 'https://freegeoip.klokantech.com/json/');
+            oReq.send();
+        }
 		// W3C Geolocation provided by modern browsers
 		if (typeof(navigator.geolocation) != 'undefined') {
 			navigator.geolocation.getCurrentPosition(function(position) {
@@ -57,28 +83,22 @@ function initialize() {
 				} else {
 					initialize_map(map_zoom, map_center);
 				}
+			}, function(err) {
+                doGeoIp();
 			});
-		// ClientLocation filled in by the Google loader
-		} else if (google.loader.ClientLocation) {
-          //TODO use freegeoip ?
-	      var center = ol.proj.fromLonLat([
-                google.loader.ClientLocation.longitude,
-                google.loader.ClientLocation.latitude
-            ]);
-		  if (ol.extent.containsCoordinate(gbbounds, center)) {
-			map_center = center;
-			map_zoom = 13;
-          }
+		} else {
+            doGeoIp();
 	    };
 	} else if (param_q) {
-        var url = 'https://geocoder.tilehosting.com/q/' + param_q + '.js?key=6mugkTijDnj5zw1Kh7Q5';
+        isAsync = true;
+        var url = 'https://geocoder.tilehosting.com/gb/q/' + param_q + '.js?key=6mugkTijDnj5zw1Kh7Q5';
 
         function reqListener() {
             var response = JSON.parse(this.responseText);
             if (response.results && response.results.length) {
                 var first = response.results[0];
                 if (param_zoom) map_zoom = parseInt(param_zoom);
-                map_center = ol.proj.fromLonLat([first.lng, first.lat]);
+                map_center = ol.proj.fromLonLat([first.lon, first.lat]);
                 initialize_map( map_zoom, map_center, ol.extent.applyTransform(
                     first.boundingbox,
                     ol.proj.getTransform('EPSG:4326', 'EPSG:3857')
@@ -97,10 +117,10 @@ function initialize() {
 	if (param_zoom) map_zoom = parseInt(param_zoom);
 
 	// Initialize map only if we are not searching via GeoCoder
-	if (!param_q) {
+	if (!isAsync) {
 		initialize_map(map_zoom, map_center);
 	}
-	
+
     // Disable right click context menu
     document.getElementById('nlslogo')['oncontextmenu'] = function() { return false; };
     document.getElementById('klokantechlogo')['oncontextmenu'] = function() { return false; };
@@ -139,17 +159,21 @@ function initialize_map(map_zoom, map_center, map_viewport) {
         controls: ol.control.defaults({attribution: false}),
         view: new ol.View({
             center: map_center,
-            zoom: map_zoom
+            zoom: map_zoom,
+            minResolution: 40075016.68557849 / 256 / Math.pow(2, 15)
         })
     });
-	
+
 	if (map_viewport) {
 		map.getView().fit(map_viewport);
+        map.getView().setResolution(map.getView().constrainResolution(map.getView().getResolution()));
 	}
+
+    document.getElementById('loading').style.display = 'none';
 }
 
-</script> 
-</head> 
+</script>
+</head>
 <body style="margin:0px; padding:0px;" onload="initialize()">
   <div id="map_canvas" style="width:100%; height:100%;background:#cedfe4;"></div>
 
@@ -159,5 +183,6 @@ function initialize_map(map_zoom, map_center, map_viewport) {
 
 <div id="nlsmaptext" style=" -webkit-user-select: none; position: absolute; bottom: 0px; right:0px; color:black;font-family: Arial, sans-serif; font-size:11px; white-space: nowrap; text-align: right; padding:2px;">Historical maps from 1919-47 <a href="http://geo.nls.uk/maps/api/" target="_blank">NLS Maps API</a></div>
 
+<div id="loading" style="position:absolute;top:50%;left:50%;width:200px;text-align:center;margin-left:-100px;">Loading...</div>
 </body>
 </html>
